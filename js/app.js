@@ -1,4 +1,4 @@
-// Enemies our player must avoid
+// Function to generate random row and speed for enemies
 var enemySpecs = function() {
     row_num = Math.floor(Math.random() * 3) + 1;
 
@@ -7,16 +7,13 @@ var enemySpecs = function() {
     return [y, speed]
 }
 
+// Enemies our player must avoid
 var Enemy = function(x, y) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
-
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     
-    // Setting the Enemy initial location (you need to implement)
-    
+    // Setting the Enemy initial location
     row_num = Math.floor(Math.random() * 3) + 1;
     this.x = 1;
 
@@ -26,11 +23,12 @@ var Enemy = function(x, y) {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+    // Multiplying speed by dt parameter ensures game rurns
+    // at the same speed on any machine
     this.x += this.speed*dt;
 
+    // When the enemy moves off the screen, moves bug 
+    // back to the left of the screen
     if (this.x > 505) {
         this.x = 1;
         [this.y, this.speed] = enemySpecs();
@@ -42,7 +40,7 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
+// Player class
 var Player = function() {
     // Player Image
     this.sprite = 'images/char-horn-girl.png';
@@ -52,6 +50,8 @@ var Player = function() {
     this.y = 83*5-18;
 }
 
+// Method to set the player back to the original location 
+// after a .5s delay
 Player.prototype.resetPlayer = function() {
     const player = this;
     setTimeout(function() {
@@ -60,9 +60,9 @@ Player.prototype.resetPlayer = function() {
         player.y = 83*5-18;
     }, 500)
 }
-// This class requires an update(), render() and
-// a handleInput() method.
+// Updates the location of player
 Player.prototype.update = function() {
+    // Checks for collision with an enemy
     for (enemy of allEnemies) {
         if (enemy.y == this.y && Math.abs(enemy.x - this.x) < 50) {
             this.sprite = 'images/Rock.png';
@@ -70,16 +70,19 @@ Player.prototype.update = function() {
         }
     }
 
+    // Checks if the player wins (reaches the other side)
     if (this.y == 65-83) {
         this.sprite = 'images/Star.png';
         this.resetPlayer();
     }
 }
 
+// Render player image
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
+// Update player location based on key input
 Player.prototype.handleInput = function(key) {
     switch (key) {
         case 'left':
@@ -106,9 +109,8 @@ Player.prototype.handleInput = function(key) {
 
 }
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
+// Instantiate enemy objects
+// Specify number of enemies and puts it in an array, allEnemies
 num_enemies = 3;//Math.floor(Math.random() * 4) + 1;
 
 const allEnemies=[];
@@ -120,9 +122,8 @@ for (i=0; i<num_enemies; i++) {
 
 const player = new Player();
 
-
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// Listens for key presses and sends the keys to your
+// Player.handleInput() method.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
