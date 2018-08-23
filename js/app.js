@@ -45,36 +45,42 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 var Player = function() {
     // Player Image
-    // this.sprite = 'images/char-horn-girl.png';
     this.sprite = 'images/char-horn-girl.png';
 
     // Setting the Player initial location
     this.x = 202;
     this.y = 83*5-18;
 }
+
+Player.prototype.resetPlayer = function() {
+    const player = this;
+    setTimeout(function() {
+        player.sprite = 'images/char-horn-girl.png';
+        player.x = 202;
+        player.y = 83*5-18;
+    }, 500)
+}
 // This class requires an update(), render() and
 // a handleInput() method.
 Player.prototype.update = function() {
     for (enemy of allEnemies) {
         if (enemy.y == this.y && Math.abs(enemy.x - this.x) < 50) {
-            this.x = 202;
-            this.y = 83*5-18;
+            this.sprite = 'images/Rock.png';
+            this.resetPlayer();
         }
     }
 
     if (this.y == 65-83) {
-        this.x = 202;
-        this.y = 83*5-18;
+        this.sprite = 'images/Star.png';
+        this.resetPlayer();
     }
 }
 
 Player.prototype.render = function() {
-    // render() method
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
 Player.prototype.handleInput = function(key) {
-    // handleInput() method
     switch (key) {
         case 'left':
             if (this.x > 0) {
